@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reverse String</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --bg-top: #f5efe6;
+            --bg-bottom: #d8e6f2;
+            --card: rgba(255, 252, 247, 0.92);
+            --card-border: rgba(63, 87, 111, 0.14);
+            --text-main: #1c2a39;
+            --text-muted: #59687a;
+            --accent: #0f766e;
+            --accent-dark: #0a4f4a;
+            --accent-soft: #d8f3ef;
+            --warning-bg: #fff4dd;
+            --warning-text: #7a4b00;
+            --error-bg: #fde8e8;
+            --error-text: #9a1c1c;
+            --shadow: 0 22px 60px rgba(28, 42, 57, 0.14);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Avenir Next", "Trebuchet MS", sans-serif;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at top left, rgba(255, 255, 255, 0.85), transparent 36%),
+                radial-gradient(circle at 85% 15%, rgba(15, 118, 110, 0.15), transparent 18%),
+                linear-gradient(160deg, var(--bg-top), var(--bg-bottom));
+        }
+
+        .page {
+            width: min(100%, 960px);
+            margin: 0 auto;
+            padding: 32px 20px 48px;
+        }
+
+        .app-shell {
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            background: var(--card);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+
+        .hero {
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            margin: 0 0 10px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(15, 118, 110, 0.1);
+            color: var(--accent-dark);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        h1,
+        h2 {
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            line-height: 1.05;
+        }
+
+        .hero p {
+            margin: 12px 0 0;
+            max-width: 52ch;
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .controls {
+            display: grid;
+            gap: 12px;
+        }
+
+        label {
+            font-weight: 700;
+            font-size: 0.98rem;
+        }
+
+        .input-wrap {
+            display: grid;
+            gap: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px 16px;
+            border: 1px solid rgba(89, 104, 122, 0.25);
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-main);
+            font: inherit;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        input::placeholder {
+            color: #7d8b9a;
+        }
+
+        input:focus-visible,
+        button:focus-visible {
+            outline: 3px solid rgba(15, 118, 110, 0.28);
+            outline-offset: 3px;
+        }
+
+        input:focus {
+            border-color: rgba(15, 118, 110, 0.55);
+            box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .control-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hint,
+        .counter {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 999px;
+            padding: 13px 18px;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: #ffffff;
+            box-shadow: 0 12px 24px rgba(15, 118, 110, 0.25);
+        }
+
+        .secondary-btn {
+            background: rgba(28, 42, 57, 0.08);
+            color: var(--text-main);
+        }
+
+        button[disabled] {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .result-card {
+            margin-top: 28px;
+            padding: 22px;
+            border-radius: var(--radius-lg);
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(89, 104, 122, 0.12);
+        }
+
+        .result-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 1.35rem;
+        }
+
+        .status-note {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+        }
+
+        .result-box {
+            min-height: 116px;
+            border-radius: var(--radius-md);
+            padding: 18px;
+            border: 1px dashed rgba(89, 104, 122, 0.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            line-height: 1.5;
+            word-break: break-word;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .result-box.is-empty {
+            background: var(--warning-bg);
+            color: var(--warning-text);
+        }
+
+        .result-box.has-result {
+            background: var(--accent-soft);
+            color: var(--accent-dark);
+            border-style: solid;
+            border-color: rgba(15, 118, 110, 0.22);
+        }
+
+        .result-box.is-error {
+            background: var(--error-bg);
+            color: var(--error-text);
+            border-style: solid;
+            border-color: rgba(154, 28, 28, 0.18);
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                padding: 18px 14px 32px;
+            }
+
+            .app-shell,
+            .result-card {
+                padding: 20px;
+            }
+
+            .actions button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <section class="app-shell" aria-labelledby="page-title">
+            <header class="hero">
+                <p class="eyebrow">Reverse String</p>
+                <h1 id="page-title">Dale la vuelta a cualquier texto</h1>
+                <p>
+                    Escribe una palabra, una frase o algo con símbolos raros. Aquí lo giramos sin drama
+                    y con un resultado fácil de leer.
+                </p>
+            </header>
+
+            <section class="controls" aria-label="Herramienta para invertir texto">
+                <div class="input-wrap">
+                    <label for="text-input">Texto a invertir</label>
+                    <input
+                        id="text-input"
+                        type="text"
+                        placeholder="Prueba con AI4Devs"
+                        autocomplete="off"
+                        spellcheck="false"
+                    >
+                </div>
+
+                <div class="control-meta">
+                    <p class="hint">Pulsa Enter o usa el botón. Prometido: no muerde.</p>
+                    <p class="counter" id="char-counter" aria-live="polite">0 caracteres</p>
+                </div>
+
+                <div class="actions">
+                    <button id="reverse-button" class="primary-btn" type="button">Invertir texto</button>
+                    <button id="copy-button" class="secondary-btn" type="button" hidden disabled>
+                        Copiar resultado
+                    </button>
+                </div>
+            </section>
+
+            <section class="result-card" aria-labelledby="result-title">
+                <div class="result-head">
+                    <h2 id="result-title">Resultado</h2>
+                    <p class="status-note" id="status-note">Esperando tu texto.</p>
+                </div>
+                <div id="result-box" class="result-box is-empty" aria-live="polite" aria-atomic="true" role="status">
+                    Escribe algo para ver la magia al revés.
+                </div>
+            </section>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
